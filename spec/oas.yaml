@@ -1,0 +1,531 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Powerplay Fines Service
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost/-/api/v0/fines/
+  - url: https://api.powerplayfines.co.uk/v0/fines/
+
+paths:
+  /leagues:
+    get:
+      summary: Get all leagues that the user can access
+      operationId: getLeagues
+      tags:
+        - leagues
+      parameters:
+        - name: events
+          in: query
+          description: Should send events with response
+          required: false
+          schema:
+            type: boolean
+        - name: filter
+          in: query
+          description: Should filter the requests with the param
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All leagues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Season"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+    post:
+      summary: Create new league
+      operationId: createLeague
+      tags:
+        - leagues
+      requestBody:
+        description: League to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Season"
+      responses:
+        '201':
+          description: Created league data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    $ref: "#/components/schemas/Season"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+  /leagues/{league}:
+    get:
+      summary: Get league using its ID
+      operationId: getLeagueWithID
+      tags:
+        - leagues
+      parameters:
+        - name: league
+          in: path
+          description: The league ID
+          required: true
+          schema:
+            type: string
+        - name: events
+          in: query
+          description: Should send events with response
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: The ID of the league to fetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    $ref: "#/components/schemas/Season"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+    patch:
+      summary: Update a single league based on the ID passed
+      operationId: updateLeagueWithID
+      tags:
+        - leagues
+      parameters:
+        - name: league
+          in: path
+          description: The ID of the league to fetch
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: JSON Patch with updates for configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchBody"
+      responses:
+        '200':
+          description: Updated configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    $ref: "#/components/schemas/Season"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a single league based on the ID passed
+      operationId: deleteLeagueWithID
+      tags:
+        - leagues
+      parameters:
+        - name: league
+          in: path
+          description: The ID of the league to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Empty Response
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+  /leagues/{league}/events:
+    get:
+      summary: Get all events for a league
+      operationId: getLeagueEventsWithID
+      tags:
+        - events
+      parameters:
+        - name: league
+          in: path
+          description: The league ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Load all the events for the leagues
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Event"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+    post:
+      summary: Create new league
+      operationId: createEvent
+      tags:
+        - events
+      parameters:
+        - name: league
+          in: path
+          description: The league ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Event to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Event"
+      responses:
+        '201':
+          description: Created league data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    $ref: "#/components/schemas/Event"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+  /leagues/{league}/events/{event}:
+    get:
+      summary: Get event using its ID
+      operationId: getEventWithID
+      tags:
+        - events
+      parameters:
+        - name: league
+          in: path
+          description: The league ID
+          required: true
+          schema:
+            type: string
+        - name: event
+          in: path
+          description: The event ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The ID of the event to fetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    $ref: "#/components/schemas/Event"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+    patch:
+      summary: Update a single event based on the ID passed
+      operationId: updateEventWithID
+      tags:
+        - events
+      parameters:
+        - name: league
+          in: path
+          description: The ID of the league to fetch
+          required: true
+          schema:
+            type: string
+        - name: event
+          in: path
+          description: The ID of the event to fetch
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: JSON Patch with updates for configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchBody"
+      responses:
+        '200':
+          description: Updated configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/Meta"
+                  data:
+                    $ref: "#/components/schemas/Event"
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a single league based on the ID passed
+      operationId: deleteEventWithID
+      tags:
+        - events
+      parameters:
+        - name: league
+          in: path
+          description: The ID of the league to fetch
+          required: true
+          schema:
+            type: string
+        - name: event
+          in: path
+          description: The ID of the event to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Empty Response
+        default:
+          description: Error response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  error:
+                    $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Season:
+      type: object
+      required:
+        - name
+        - config
+        - type
+      properties:
+        name:
+          type: string
+          default: Powerplay 4's
+        config:
+          type: string
+          default: qwertyuiop
+        center:
+          type: string
+          default: Shipley
+        type:
+          type: string
+          enum: [league, tournament]
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/TooltipEvent"
+    TooltipEvent:
+      type: object
+      properties:
+        _id:
+          type: string
+          default: qwertyuiop
+        round:
+          type: number
+          default: 1
+    Event:
+      type: object
+      properties:
+        season:
+          type: string
+          default: qwertyuiop
+        round:
+          type: number
+          default: 1
+        players:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: array
+              items:
+                type: string
+                default: H
+          example:
+            HW: [[], [H], [D]]
+        captains:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: array
+              items:
+                type: string
+                default: H
+          example:
+            HW: [ [ ], [ H ], [ D ] ]
+        type:
+          type: string
+          enum: [week, round, block]
+    Meta:
+      type: object
+      required:
+        - status
+        - requestId
+      properties:
+        status:
+          type: number
+        id:
+          type: string
+        requestId:
+          type: string
+    Error:
+      type: object
+      required:
+        - name
+        - message
+      properties:
+        message:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+        underlyingError:
+          type: object
+        meta:
+          type: object
+    PatchBody:
+      type: array
+      items:
+        $ref: "#/components/schemas/PatchDocument"
+    PatchDocument:
+      type: object
+      description: A JSONPatch document as defined by RFC 6902
+      required:
+        - "op"
+        - "path"
+      properties:
+        op:
+          type: string
+          description: The operation to be performed
+          enum:
+            - "add"
+            - "remove"
+            - "replace"
+            - "move"
+            - "copy"
+            - "test"
+        path:
+          type: string
+          description: A JSON-Pointer
+        value:
+          type: object
+          description: The value to be used within the operations.
+        from:
+          type: string
+          description: A string containing a JSON Pointer value.
