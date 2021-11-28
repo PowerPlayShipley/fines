@@ -1,10 +1,11 @@
 const controller = require('../controller/events.ctrl')
+const { patch, post } = require('../../middleware/validation')
 
 module.exports = (router) => {
-  router.get('/leagues/:league/events', controller.getLeagueEventsWithID)
-  router.post('/leagues/:league/events', controller.createEvent)
+  router.get('/seasons/:season/events', controller.getSeasonEventsWithID)
+  router.post('/seasons/:season/events', post('event'), controller.createEvent)
 
-  router.get('/leagues/:league/events/:event', controller.getEventWithID)
-  router.patch('/leagues/:league/events/:event', controller.updateEventWithID)
-  router.delete('/leagues/:league/events/:event', controller.deleteEventWithID)
+  router.get('/seasons/:season/events/:event', controller.getEventWithID)
+  router.patch('/seasons/:season/events/:event', patch, controller.updateEventWithID)
+  router.delete('/seasons/:season/events/:event', controller.deleteEventWithID)
 }
