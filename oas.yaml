@@ -91,18 +91,14 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
   /season/{season}:
+    parameters:
+      - $ref: '#/components/parameters/season'
     get:
       summary: Get season using its ID
       operationId: getSeasonWithID
       tags:
         - seasons
       parameters:
-        - name: season
-          in: path
-          description: The season ID
-          required: true
-          schema:
-            type: string
         - name: events
           in: query
           description: Should send events with response
@@ -137,13 +133,6 @@ paths:
       operationId: updateSeasonWithID
       tags:
         - seasons
-      parameters:
-        - name: season
-          in: path
-          description: The ID of the season to fetch
-          required: true
-          schema:
-            type: string
       requestBody:
         description: JSON Patch with updates for configuration
         required: true
@@ -179,13 +168,6 @@ paths:
       operationId: deleteSeasonsWithID
       tags:
         - seasons
-      parameters:
-        - name: season
-          in: path
-          description: The ID of the season to fetch
-          required: true
-          schema:
-            type: string
       responses:
         '204':
           description: Empty Response
@@ -201,18 +183,13 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
   /season/{season}/events:
+    parameters:
+      - $ref: '#/components/parameters/season'
     get:
-      summary: Get all events for a league
+      summary: Get all events for a season
       operationId: getSeasonEventsWithID
       tags:
         - events
-      parameters:
-        - name: season
-          in: path
-          description: The season ID
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Load all the events for the leagues
@@ -243,13 +220,6 @@ paths:
       operationId: createEvent
       tags:
         - events
-      parameters:
-        - name: season
-          in: path
-          description: The season ID
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Event to create
         required: true
@@ -281,24 +251,14 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
   /season/{season}/events/{event}:
+    parameters:
+      - $ref: '#/components/parameters/season'
+      - $ref: '#/components/parameters/event'
     get:
       summary: Get event using its ID
       operationId: getEventWithID
       tags:
         - events
-      parameters:
-        - name: season
-          in: path
-          description: The season ID
-          required: true
-          schema:
-            type: string
-        - name: event
-          in: path
-          description: The event ID
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: The ID of the event to fetch
@@ -327,19 +287,6 @@ paths:
       operationId: updateEventWithID
       tags:
         - events
-      parameters:
-        - name: season
-          in: path
-          description: The ID of the season to fetch
-          required: true
-          schema:
-            type: string
-        - name: event
-          in: path
-          description: The ID of the event to fetch
-          required: true
-          schema:
-            type: string
       requestBody:
         description: JSON Patch with updates for configuration
         required: true
@@ -371,23 +318,10 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     delete:
-      summary: Delete a single league based on the ID passed
+      summary: Delete a single event based on the ID passed
       operationId: deleteEventWithID
       tags:
         - events
-      parameters:
-        - name: season
-          in: path
-          description: The ID of the season to fetch
-          required: true
-          schema:
-            type: string
-        - name: event
-          in: path
-          description: The ID of the event to fetch
-          required: true
-          schema:
-            type: string
       responses:
         '204':
           description: Empty Response
@@ -404,6 +338,21 @@ paths:
                     $ref: "#/components/schemas/Error"
 
 components:
+  parameters:
+    season:
+      name: season
+      in: path
+      description: The ID of the season to fetch
+      required: true
+      schema:
+        type: string
+    event:
+      name: event
+      in: path
+      description: The ID of the event to fetch
+      required: true
+      schema:
+        type: string
   schemas:
     Season:
       type: object
@@ -529,3 +478,8 @@ components:
         from:
           type: string
           description: A string containing a JSON Pointer value.
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
