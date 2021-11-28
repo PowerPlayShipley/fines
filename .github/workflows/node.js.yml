@@ -66,13 +66,13 @@ jobs:
           files: |
             spec/oas.yaml
       - name: Generate Swagger UI
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        if: steps.changed-files.outputs.modified_files == 'spec/oas.yaml'
         uses: Legion2/swagger-ui-action@v1
         with:
           output: swagger-ui
           spec-file: ./spec/oas.yaml
       - name: Deploy to GitHub Pages
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        if: steps.changed-files.outputs.modified_files == 'spec/oas.yaml'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
