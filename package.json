@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@harrytwright/cli-config": "^2.0.0-beta.4",
-    "@harrytwright/networking": "0.2.0-beta.1",
+    "@harrytwright/networking": "0.2.0-beta.2",
     "@hndlr/erred": "^0.0.1-beta.1",
     "@hndlr/errors": "^0.0.1-beta.1",
     "ajv": "^6.12.4",
