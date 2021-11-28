@@ -202,7 +202,7 @@ paths:
                     $ref: "#/components/schemas/Error"
   /season/{season}/events:
     get:
-      summary: Get all events for a league
+      summary: Get all events for a season
       operationId: getSeasonEventsWithID
       tags:
         - events
@@ -371,7 +371,7 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     delete:
-      summary: Delete a single league based on the ID passed
+      summary: Delete a single event based on the ID passed
       operationId: deleteEventWithID
       tags:
         - events
