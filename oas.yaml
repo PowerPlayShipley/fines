@@ -11,12 +11,12 @@ servers:
   - url: https://api.powerplayfines.co.uk/v0/fines/
 
 paths:
-  /leagues:
+  /season:
     get:
-      summary: Get all leagues that the user can access
-      operationId: getLeagues
+      summary: Get all seasons that the user can access
+      operationId: getSeasons
       tags:
-        - leagues
+        - seasons
       parameters:
         - name: events
           in: query
@@ -32,7 +32,7 @@ paths:
             type: string
       responses:
         '200':
-          description: All leagues
+          description: All seasons
           content:
             application/json:
               schema:
@@ -56,12 +56,12 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     post:
-      summary: Create new league
-      operationId: createLeague
+      summary: Create new season
+      operationId: createSeason
       tags:
-        - leagues
+        - seasons
       requestBody:
-        description: League to create
+        description: Season to create
         required: true
         content:
           application/json:
@@ -90,16 +90,16 @@ paths:
                     type: integer
                   error:
                     $ref: "#/components/schemas/Error"
-  /leagues/{league}:
+  /season/{season}:
     get:
-      summary: Get league using its ID
-      operationId: getLeagueWithID
+      summary: Get season using its ID
+      operationId: getSeasonWithID
       tags:
-        - leagues
+        - seasons
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The league ID
+          description: The season ID
           required: true
           schema:
             type: string
@@ -133,14 +133,14 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     patch:
-      summary: Update a single league based on the ID passed
-      operationId: updateLeagueWithID
+      summary: Update a single season based on the ID passed
+      operationId: updateSeasonWithID
       tags:
-        - leagues
+        - seasons
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The ID of the league to fetch
+          description: The ID of the season to fetch
           required: true
           schema:
             type: string
@@ -175,14 +175,14 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     delete:
-      summary: Delete a single league based on the ID passed
-      operationId: deleteLeagueWithID
+      summary: Delete a single season based on the ID passed
+      operationId: deleteSeasonsWithID
       tags:
-        - leagues
+        - seasons
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The ID of the league to fetch
+          description: The ID of the season to fetch
           required: true
           schema:
             type: string
@@ -200,16 +200,16 @@ paths:
                     type: integer
                   error:
                     $ref: "#/components/schemas/Error"
-  /leagues/{league}/events:
+  /season/{season}/events:
     get:
       summary: Get all events for a league
-      operationId: getLeagueEventsWithID
+      operationId: getSeasonEventsWithID
       tags:
         - events
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The league ID
+          description: The season ID
           required: true
           schema:
             type: string
@@ -239,14 +239,14 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     post:
-      summary: Create new league
+      summary: Create new event
       operationId: createEvent
       tags:
         - events
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The league ID
+          description: The season ID
           required: true
           schema:
             type: string
@@ -280,16 +280,16 @@ paths:
                     type: integer
                   error:
                     $ref: "#/components/schemas/Error"
-  /leagues/{league}/events/{event}:
+  /season/{season}/events/{event}:
     get:
       summary: Get event using its ID
       operationId: getEventWithID
       tags:
         - events
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The league ID
+          description: The season ID
           required: true
           schema:
             type: string
@@ -328,9 +328,9 @@ paths:
       tags:
         - events
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The ID of the league to fetch
+          description: The ID of the season to fetch
           required: true
           schema:
             type: string
@@ -376,9 +376,9 @@ paths:
       tags:
         - events
       parameters:
-        - name: league
+        - name: season
           in: path
-          description: The ID of the league to fetch
+          description: The ID of the season to fetch
           required: true
           schema:
             type: string
