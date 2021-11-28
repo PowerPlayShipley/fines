@@ -11,7 +11,7 @@ servers:
   - url: https://api.powerplayfines.co.uk/v0/fines/
 
 paths:
-  /season:
+  /seasons:
     get:
       summary: Get all seasons that the user can access
       operationId: getSeasons
@@ -90,7 +90,7 @@ paths:
                     type: integer
                   error:
                     $ref: "#/components/schemas/Error"
-  /season/{season}:
+  /seasons/{season}:
     parameters:
       - $ref: '#/components/parameters/season'
     get:
@@ -182,7 +182,7 @@ paths:
                     type: integer
                   error:
                     $ref: "#/components/schemas/Error"
-  /season/{season}/events:
+  /seasons/{season}/events:
     parameters:
       - $ref: '#/components/parameters/season'
     get:
@@ -250,7 +250,7 @@ paths:
                     type: integer
                   error:
                     $ref: "#/components/schemas/Error"
-  /season/{season}/events/{event}:
+  /seasons/{season}/events/{event}:
     parameters:
       - $ref: '#/components/parameters/season'
       - $ref: '#/components/parameters/event'
