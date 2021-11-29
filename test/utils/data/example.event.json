@@ -1,0 +1,5 @@
+{
+  "season": "${{season}}",
+  "round": 1,
+  "type": "week"
+}

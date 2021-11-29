@@ -64,7 +64,7 @@ const season = {
     },
     type: {
       type: 'string',
-      enum: ['league', 'tournament']
+      enum: ['league', 'tournament', 'practice']
     },
   }
 }

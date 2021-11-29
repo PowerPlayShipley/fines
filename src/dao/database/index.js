@@ -7,7 +7,6 @@ const config = require('../../config')
 const promiseOrCallback = require('../utils/promiseOrCallback')
 
 const _client = Symbol('database:client')
-const _database = Symbol('database:database')
 
 /**
  * Database handler
@@ -19,7 +18,6 @@ function Database () {
   this.ctx = undefined
   /** @type module::monk.IMonkManager */
   this[_client] = undefined
-  this[_database] = undefined
 }
 
 /* istanbul ignore next */
@@ -27,37 +25,69 @@ Database.prototype.status = function () {
   return this[_client] ? this[_client]._state : 'uninitialised'
 }
 
-Database.prototype.insert = function (data, options, callback) {
-  if (typeof options === 'function') {
-    callback = options
-    options = null
-  }
+Database.prototype.find = function (collection) {
+  return function (lookup, options, callback) {
+    if (typeof options === 'function') {
+      callback = options
+      options = null
+    }
 
-  return promiseOrCallback(callback, (cb) => {
-    return this[_database].insert(data, options, cb)
-  })
+    return promiseOrCallback(callback, (cb) => {
+      return this[_client].get(collection).find(lookup, options, cb)
+    })
+  }.bind(this)
 }
 
-Database.prototype.findOneWithId = function (id, options, callback) {
-  if (typeof options === 'function') {
-    callback = options
-    options = null
-  }
+Database.prototype.delete = function (collection) {
+  return function (id, options, callback) {
+    if (typeof options === 'function') {
+      callback = options
+      options = null
+    }
 
-  return promiseOrCallback(callback, (cb) => {
-    return this[_database].findOne(id, options, cb)
-  })
+    return promiseOrCallback(callback, (cb) => {
+      return this[_client].get(collection).findOneAndDelete(id, options, cb)
+    })
+  }.bind(this)
 }
 
-Database.prototype.findOneAndUpdateWithId = function (id, options, callback) {
-  if (typeof options === 'function') {
-    callback = options
-    options = null
-  }
+Database.prototype.insert = function (collection) {
+  return function (data, options, callback) {
+    if (typeof options === 'function') {
+      callback = options
+      options = null
+    }
 
-  return promiseOrCallback(callback, (cb) => {
-    return this[_database].findOneAndUpdate(id, options, cb)
-  })
+    return promiseOrCallback(callback, (cb) => {
+      return this[_client].get(collection).insert(data, options, cb)
+    })
+  }.bind(this)
+}
+
+Database.prototype.findOneWithId = function (collection) {
+  return function (id, options, callback) {
+    if (typeof options === 'function') {
+      callback = options
+      options = null
+    }
+
+    return promiseOrCallback(callback, (cb) => {
+      return this[_client].get(collection).findOne(id, options, cb)
+    })
+  }.bind(this)
+}
+
+Database.prototype.findOneAndUpdateWithId = function (collection) {
+  return function (id, options, callback) {
+    if (typeof options === 'function') {
+      callback = options
+      options = null
+    }
+
+    return promiseOrCallback(callback, (cb) => {
+      return this[_client].get(collection).findOneAndUpdate(id, options, cb)
+    })
+  }.bind(this)
 }
 
 /**
@@ -89,10 +119,6 @@ Database.prototype.connect = function (options = config, callback) {
       } catch (err) {
         log.notice('monk', { }, 'zipkin middleware not initialised')
       }
-
-      self[_database] = client.get(ctx.collection)
-
-      await self._initialise(ctx)
 
       cb(null, self)
     })
@@ -148,7 +174,6 @@ function createMongoContext (config) {
 
   return {
     uri: uri.href,
-    collection: config.get('database-collection'),
     options: {
       appname: config.get('name'),
       useNewUrlParser: true,

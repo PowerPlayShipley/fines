@@ -372,7 +372,7 @@ components:
           default: Shipley
         type:
           type: string
-          enum: [league, tournament]
+          enum: [league, tournament, practice]
         events:
           type: array
           items:
