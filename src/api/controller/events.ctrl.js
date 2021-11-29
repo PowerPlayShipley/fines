@@ -1,5 +1,6 @@
 const toMongodb = require('jsonpatch-to-mongodb')
 
+const config = require('../../config')
 const datastore = require('../../dao/database')
 
 module.exports = Object.assign({}, {
@@ -9,7 +10,7 @@ module.exports = Object.assign({}, {
     let response
 
     try {
-      response = await datastore.find('events')({ season }, '_id season round type')
+      response = await datastore.find(config.get('collection-events'))({ season }, '_id season round type')
     } catch (err) {
       return next(err)
     }
@@ -27,7 +28,7 @@ module.exports = Object.assign({}, {
 
     let response
     try {
-      response = await datastore.insert('events')(body)
+      response = await datastore.insert(config.get('collection-events'))(body)
     } catch (err) {
       return next(err)
     }
@@ -46,7 +47,7 @@ module.exports = Object.assign({}, {
 
     let response
     try {
-      response = await datastore.findOneWithId('events')(event)
+      response = await datastore.findOneWithId(config.get('collection-events'))(event)
     } catch (err) {
       return next(err)
     }
@@ -69,7 +70,7 @@ module.exports = Object.assign({}, {
     try {
       const patches = toMongodb(Array.isArray(data) ? data : [data])
 
-      response = await datastore.findOneAndUpdateWithId('events')(event, patches)
+      response = await datastore.findOneAndUpdateWithId(config.get('collection-events'))(event, patches)
     } catch (err) {
       return next(err)
     }
@@ -87,7 +88,7 @@ module.exports = Object.assign({}, {
     const { event } = req.params
 
     try {
-      await datastore.delete('events')(event)
+      await datastore.delete(config.get('collection-events'))(event)
     } catch (err) {
       return next(err)
     }

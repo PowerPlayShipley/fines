@@ -17,7 +17,7 @@ describe('server', function () {
 
   before(function () {
     // Have to load this first, any subsequent
-    config = require('../src/config')
+    config = cleanRequire('../src/config')
     config.load()
   })
 
@@ -114,3 +114,8 @@ describe('server', function () {
     })
   })
 });
+
+function cleanRequire (path) {
+  delete require.cache[require.resolve(path)]
+  return require(path)
+}

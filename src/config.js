@@ -26,6 +26,8 @@ const defaults = {
   ...environment,
   cors: '*',
   date: buildDate,
+  'collection-seasons': 'seasons',
+  'collection-events': 'events',
   'database-uri': 'localhost:27017/fines',
   loglevel: 'info',
   name,
@@ -39,7 +41,8 @@ const defaults = {
 const types = {
   cors: String,
   date: [Date, String],
-  'database-collection': String,
+  'collection-season': String,
+  'collection-events': String,
   'database-uri': String,
   loglevel: [
     'silent',
@@ -64,7 +67,8 @@ const types = {
 }
 
 const shorthand = {
-  collection: ['--database-collection'],
+  seasons: ['--collection-season'],
+  events: ['--collection-events'],
   verbose: ['--loglevel', 'verbose']
 }
 

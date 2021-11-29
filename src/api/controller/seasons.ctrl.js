@@ -1,5 +1,6 @@
 const toMongodb = require('jsonpatch-to-mongodb')
 
+const config = require('../../config')
 const datastore = require('../../dao/database')
 
 module.exports = Object.assign({}, {
@@ -7,7 +8,7 @@ module.exports = Object.assign({}, {
     let response
 
     try {
-      response = await datastore.find('seasons')({})
+      response = await datastore.find(config.get('collection-seasons'))({})
     } catch (err) {
       return next(err)
     }
@@ -25,7 +26,7 @@ module.exports = Object.assign({}, {
 
     let response
     try {
-      response = await datastore.insert('seasons')(body)
+      response = await datastore.insert(config.get('collection-seasons'))(body)
     } catch (err) {
       return next(err)
     }
@@ -44,7 +45,7 @@ module.exports = Object.assign({}, {
 
     let response
     try {
-      response = await datastore.findOneWithId('seasons')(season)
+      response = await datastore.findOneWithId(config.get('collection-seasons'))(season)
     } catch (err) {
       return next(err)
     }
@@ -67,7 +68,7 @@ module.exports = Object.assign({}, {
     try {
       const patches = toMongodb(Array.isArray(data) ? data : [data])
 
-      response = await datastore.findOneAndUpdateWithId('seasons')(season, patches)
+      response = await datastore.findOneAndUpdateWithId(config.get('collection-seasons'))(season, patches)
     } catch (err) {
       return next(err)
     }
@@ -85,7 +86,7 @@ module.exports = Object.assign({}, {
     const { season } = req.params
 
     try {
-      await datastore.delete('seasons')(season)
+      await datastore.delete(config.get('collection-seasons'))(season)
     } catch (err) {
       return next(err)
     }

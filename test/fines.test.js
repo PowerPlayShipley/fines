@@ -25,11 +25,10 @@ describe('/seasons', function () {
   var app;
 
   before(async function () {
-    config = requireInject('../src/config')
+    config = cleanRequire('../src/config')
     config.load()
 
     config.set('database-uri', uri)
-    config.set('database-collection', nanoid())
     config.set('zipkin', nanoid())
 
     try {
@@ -56,7 +55,7 @@ describe('/seasons', function () {
         const raw = replace(await read(path.join(__dirname, './utils/data/example.season.json')), replaceRegex(ctx), (s) => createTemplatingContext(ctx)[s])
         data = JSON.parse(raw)
 
-        await mongo.insert('seasons')(data)
+        await mongo.insert(config.get('collection-seasons'))(data)
       })
 
       it('should get valid seasons', async function () {
@@ -117,7 +116,7 @@ describe('/seasons', function () {
       const raw = replace(await read(path.join(__dirname, './utils/data/example.season.json')), replaceRegex(ctx), (s) => createTemplatingContext(ctx)[s])
       data = JSON.parse(raw)
 
-      await mongo.insert('seasons')(data)
+      await mongo.insert(config.get('collection-seasons'))(data)
     })
 
     it('should get with id', async function () {
@@ -166,7 +165,7 @@ describe('/seasons', function () {
         const raw = replace(await read(path.join(__dirname, './utils/data/example.event.json')), replaceRegex(ctx), (s) => createTemplatingContext(ctx)[s])
         data = JSON.parse(raw)
 
-        await mongo.insert('events')(data)
+        await mongo.insert(config.get('collection-events'))(data)
       })
 
       it('should get valid events', async function () {
@@ -238,7 +237,7 @@ describe('/seasons', function () {
       const raw = replace(await read(path.join(__dirname, './utils/data/example.event.json')), replaceRegex(ctx), (s) => createTemplatingContext(ctx)[s])
       data = JSON.parse(raw)
 
-      await mongo.insert('events')(data)
+      await mongo.insert(config.get('collection-events'))(data)
     })
 
     it('should get with id', async function () {
