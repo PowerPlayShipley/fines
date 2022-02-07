@@ -3,8 +3,7 @@ const toMongodb = require('jsonpatch-to-mongodb')
 const config = require('../../config')
 
 const datastore = require('../../dao/database')
-const events = require("../../dao/events");
-const { ROUTING_KEY_SEASON_CREATED } = require("../../utils/events/constants");
+const { ROUTING_KEY_SEASON_CREATED, ROUTING_KEY_SEASON_UPDATED } = require("../../dao/events/constants");
 
 module.exports = Object.assign({}, {
   getSeasons: async (req, res, next) => {
@@ -25,13 +24,12 @@ module.exports = Object.assign({}, {
     })
   },
   createSeason: async (req, res, next) => {
-    const channel = await events.channel()
     const body = req.body
 
     let response
     try {
       response = await datastore.insert(config.get('collection-seasons'))(body)
-      channel.emit(ROUTING_KEY_SEASON_CREATED, response)
+      req.eventStream && req.eventStream.emit(ROUTING_KEY_SEASON_CREATED, response)
     } catch (err) {
       return next(err)
     }
@@ -74,6 +72,7 @@ module.exports = Object.assign({}, {
       const patches = toMongodb(Array.isArray(data) ? data : [data])
 
       response = await datastore.findOneAndUpdateWithId(config.get('collection-seasons'))(season, patches)
+      req.eventStream && req.eventStream.emit(ROUTING_KEY_SEASON_UPDATED, response)
     } catch (err) {
       return next(err)
     }

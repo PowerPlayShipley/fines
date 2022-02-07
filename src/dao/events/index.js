@@ -5,9 +5,15 @@ const { Channel } = require('./channel')
 const log = require('../../utils/log')
 const config = require('../../config')
 
+const STATE = {
+  initialised: 0x00,
+  connected: 0x01
+}
+
 function EventStream () {
   this.channels = []
   this.connection = void 0
+  this.state = STATE.initialised
 }
 
 /**
@@ -19,6 +25,7 @@ EventStream.prototype.connect = async function (options = config) {
   this.uri = options.get('amqp')
   this.options = options
   this.connection = await amqp.connect(this.uri)
+  this.state = STATE.connected
   return this
 }
 
@@ -44,3 +51,4 @@ EventStream.prototype.quit = function () {
 }
 
 module.exports = new EventStream()
+module.exports.STATE = STATE
