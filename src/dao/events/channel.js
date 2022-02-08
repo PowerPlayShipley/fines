@@ -47,14 +47,13 @@ class Channel {
 
     this.channel.assertQueue(this.queueName, opts).then(queue => {
       self.queue = queue
-
-      log.notice('event:on', { eventName, queue: queue.queue }, 'Listening to events %s', eventName)
-
-      eventName.forEach(event => {
-        self.channel.bindQueue(queue.queue, self.exchange, event)
-      })
-
-      self.channel.consume(queue.queue, listener, { noAck: false })
+      return queue
+    }).then(queue => {
+      log.info('event:on', { queue: queue.queue }, 'Created queue %s', queue.queue)
+      return Promise.allSettled(eventName.map((event) => self.channel.bindQueue(queue.queue, self.exchange, event)))
+    }).then((_) => {
+      log.info('event:on', { eventName, queue: self.queue.queue }, 'Listening to events %s', eventName)
+      self.channel.consume(self.queue.queue, listener, { noAck: false })
     })
   }
 

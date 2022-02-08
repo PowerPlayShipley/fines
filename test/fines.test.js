@@ -8,7 +8,9 @@ const requireInject = require('require-inject')
 
 const { nanoid } = require('nanoid')
 
+const consumer = require('./utils/consumer')
 const mongo = cleanRequire('../src/dao/database')
+const { ROUTING_KEY_SEASON_UPDATED, ROUTING_KEY_EVENTS_UPDATED } = require("../src/dao/events/constants");
 
 const expect = chai.expect
 chai.use(chaiHttp)
@@ -22,7 +24,7 @@ const replaceRegex = (ctx) => new RegExp(`\\\${{(${Object.keys(ctx).join('|')})}
 
 describe('/seasons', function () {
 
-  var app;
+  let app, event;
 
   before(async function () {
     config = cleanRequire('../src/config')
@@ -36,6 +38,9 @@ describe('/seasons', function () {
     } catch (e) { }
 
     await mongo.connect(config)
+    event = cleanRequire('../src/dao/events')
+    await event.connect(config)
+
   })
 
   beforeEach(function () {
@@ -44,7 +49,12 @@ describe('/seasons', function () {
 
   after(async function () {
     await mongo.close()
+    await event.quit()
   });
+
+  // afterEach(async function() {
+  //   a
+  // })
 
   describe('/', function () {
     describe('GET', function () {
@@ -131,6 +141,12 @@ describe('/seasons', function () {
     });
 
     it('should update the season data', async function () {
+      const [callback, waiter] = wait()
+
+      const quitter = (await consumer(config.get('amqp'), config.get('exchange'), nanoid(), ROUTING_KEY_SEASON_UPDATED))(message => {
+        callback(message)
+      })
+
       const res = await chai.request(app).patch(`/seasons/${data._id}`).send([
         {
           "op": "replace",
@@ -147,6 +163,11 @@ describe('/seasons', function () {
       let body = res.body
       // Need to convert the id to a string
       expect(body.data).to.be.deep.eq({ ...updated, _id: updated._id.toString()})
+
+      await waiter()
+      expect(callback.called).to.be.true
+
+      await quitter()
     });
 
     it('should delete the season data', async function () {
@@ -252,6 +273,12 @@ describe('/seasons', function () {
     });
 
     it('should update the season data', async function () {
+      const [callback, waiter] = wait()
+
+      const quitter = (await consumer(config.get('amqp'), config.get('exchange'), nanoid(), ROUTING_KEY_EVENTS_UPDATED))(message => {
+        callback(message)
+      })
+
       const res = await chai.request(app).patch(`/seasons/${season}/events/${data._id}`).send([
         {
           "op": "replace",
@@ -268,6 +295,11 @@ describe('/seasons', function () {
       let body = res.body
       // Need to convert the id to a string
       expect(body.data).to.be.deep.eq({ ...updated, _id: updated._id.toString()})
+
+      await waiter()
+      expect(callback.called).to.be.true
+
+      await quitter()
     });
 
     it('should delete the season data', async function () {
@@ -296,4 +328,22 @@ async function read(filePath) {
  * */
 function replace (string, withRegex, replacer) {
   return string.replace(withRegex, replacer)
+}
+
+function wait() {
+  let kResolver, kRejector
+  const callback = (...args) => {
+    callback.called = true
+
+    if (args[0] instanceof Error) kRejector && kRejector(args[0])
+    kResolver && kResolver(...args)
+  }
+
+  const waiter = () => new Promise((resolver, rejector) => {
+    kRejector = rejector
+    kResolver = resolver
+  })
+
+  callback.called = false
+  return [callback, waiter]
 }
