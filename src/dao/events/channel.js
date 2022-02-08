@@ -1,16 +1,14 @@
-const { EventEmitter } = require('events')
+// const { EventEmitter } = require('events')
 
 const log = require('../../utils/log')
 
-class Channel extends EventEmitter {
+class Channel {
 
   static async create (connection, exchange, queue = '', type = 'direct', opts = { durable: true }) {
     return (new Channel(connection, exchange, queue, type, opts)).#create()
   }
 
   constructor(connection, exchange, queue, type, opts) {
-    super();
-
     /** @typedef {amqp.Connection} */
     this.connection = connection
 

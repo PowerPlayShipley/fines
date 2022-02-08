@@ -1,7 +1,9 @@
 const toMongodb = require('jsonpatch-to-mongodb')
 
 const config = require('../../config')
+
 const datastore = require('../../dao/database')
+const { ROUTING_KEY_EVENTS_UPDATED } = require("../../dao/events/constants");
 
 module.exports = Object.assign({}, {
   getSeasonEventsWithID: async (req, res, next) => {
@@ -71,6 +73,7 @@ module.exports = Object.assign({}, {
       const patches = toMongodb(Array.isArray(data) ? data : [data])
 
       response = await datastore.findOneAndUpdateWithId(config.get('collection-events'))(event, patches)
+      req.eventStream && req.eventStream.emit(ROUTING_KEY_EVENTS_UPDATED, response)
     } catch (err) {
       return next(err)
     }

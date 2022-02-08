@@ -1,6 +1,6 @@
 module.exports = { }
 
-module.exports.ROUTING_KEY_SEASON_CREATED = 'events:fines:season:created'
+module.exports.ROUTING_KEY_EVENTS_UPDATED  = 'events:fines:events:updated'
 
 module.exports.ROUTING_KEY_SEASON_UPDATED = 'events:fines:season:updated'
 
