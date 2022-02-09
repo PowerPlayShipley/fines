@@ -164,8 +164,10 @@ describe('/seasons', function () {
       // Need to convert the id to a string
       expect(body.data).to.be.deep.eq({ ...updated, _id: updated._id.toString()})
 
-      await waiter()
+      const result = await waiter()
       expect(callback.called).to.be.true
+      expect(result.fields.routingKey).to.be.eq(ROUTING_KEY_SEASON_UPDATED)
+      expect(JSON.parse(result.content.toString())).to.deep.eq(body.data)
 
       await quitter()
     });
@@ -296,8 +298,10 @@ describe('/seasons', function () {
       // Need to convert the id to a string
       expect(body.data).to.be.deep.eq({ ...updated, _id: updated._id.toString()})
 
-      await waiter()
+      const result = await waiter()
       expect(callback.called).to.be.true
+      expect(result.fields.routingKey).to.be.eq(ROUTING_KEY_EVENTS_UPDATED)
+      expect(JSON.parse(result.content.toString())).to.deep.eq(body.data)
 
       await quitter()
     });
