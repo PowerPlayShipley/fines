@@ -9,7 +9,7 @@ class Channel {
   }
 
   constructor(connection, exchange, queue, type, opts) {
-    /** @typedef {amqp.Connection} */
+    /** @typedef {EventStream} */
     this.connection = connection
 
     /** @typedef {string} */
@@ -21,10 +21,10 @@ class Channel {
     /** @typedef {Object} */
     this.opts = opts
 
-    /** @typedef {amqp.Channel} */
+    /** @typedef {module:amqplib.Channel} */
     this.channel = void 0;
 
-    /** @typedef {amqp.Queue} */
+    /** @typedef {Object} */
     this.queue = void 0;
 
     this.queueName = queue

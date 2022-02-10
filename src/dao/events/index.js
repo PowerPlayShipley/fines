@@ -1,4 +1,4 @@
-const amqp = require('amqplib/channel_api');
+const amqp = require('amqplib');
 
 const { Channel } = require('./channel')
 
@@ -12,6 +12,7 @@ const STATE = {
 
 function EventStream () {
   this.channels = []
+  /** @type {module:amqplib.Connection} */
   this.connection = void 0
   this.state = STATE.initialised
 }
