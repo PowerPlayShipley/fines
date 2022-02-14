@@ -129,7 +129,7 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     patch:
-      summary: Update a single season based on the ID passed
+      summary: Update a single season based on the ID passed. Note, on a valid update the response will be sent along the event stream
       operationId: updateSeasonWithID
       tags:
         - seasons
@@ -283,7 +283,7 @@ paths:
                   error:
                     $ref: "#/components/schemas/Error"
     patch:
-      summary: Update a single event based on the ID passed
+      summary: Update a single event based on the ID passed. Note, on a valid update the response will be sent along the event stream
       operationId: updateEventWithID
       tags:
         - events

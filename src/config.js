@@ -24,26 +24,31 @@ environment.test = isTest
 
 const defaults = {
   ...environment,
+  amqp: 'amqp://guest:guest@localhost:5672/',
   cors: '*',
   date: buildDate,
   'collection-seasons': 'seasons',
   'collection-events': 'events',
   'database-uri': 'localhost:27017/fines',
+  exchange: 'powerplay',
   loglevel: 'info',
   name,
   proxy: true,
   port: 3000,
+  queue: 'fines',
   route: '/',
   version,
   zipkin: false
 }
 
 const types = {
+  ampq: String,
   cors: String,
   date: [Date, String],
   'collection-season': String,
   'collection-events': String,
   'database-uri': String,
+  'exchange': String,
   loglevel: [
     'silent',
     'error',
@@ -60,6 +65,7 @@ const types = {
   production: Boolean,
   proxy: Boolean,
   port: [Number, String],
+  queue: String,
   route: String,
   test: Boolean,
   version: String,
