@@ -17,7 +17,7 @@
     "@hndlr/erred": "^0.0.1-beta.1",
     "@hndlr/errors": "^0.0.1-beta.1",
     "ajv": "^6.12.4",
-    "amqplib": "github:harrytwright/amqplib",
+    "amqplib": "0.8.0",
     "body-parser": "^1.19.0",
     "cls-rtracer": "^2.6.0",
     "compression": "^1.7.4",
