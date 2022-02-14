@@ -21,6 +21,11 @@ FROM base AS build
 
 ARG NPM_TOKEN
 
+# These are needed by builders for certain packages
+RUN apk add --no-cache make && \
+    apk add --no-cache curl && \
+    apk add --no-cache git
+
 RUN mkdir -p ./src/build
 WORKDIR ./src/build
 
