@@ -42,7 +42,7 @@ const defaults = {
 }
 
 const types = {
-  ampq: String,
+  amqp: String,
   cors: String,
   date: [Date, String],
   'collection-season': String,
@@ -89,4 +89,7 @@ const envMap = {
   PORT: 'port'
 }
 
-module.exports = new Config({ defaults, types, shorthand, envMap })
+console.log(envMap, process.env)
+module.exports = new Config({
+  defaults, types, shorthand, envMap, env: process.env, argv: process.argv, cwd: process.cwd()
+})
