@@ -1,6 +1,6 @@
 {
   "name": "@ppf/fines",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The fines service is the main service, this will handle the storage and retrieval, CRUD, of the Fines data.",
   "main": "index.js",
   "scripts": {
