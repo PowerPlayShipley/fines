@@ -89,7 +89,6 @@ const envMap = {
   PORT: 'port'
 }
 
-console.log(envMap, process.env)
 module.exports = new Config({
   defaults, types, shorthand, envMap, env: process.env, argv: process.argv, cwd: process.cwd()
 })
