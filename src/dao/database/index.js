@@ -148,10 +148,6 @@ Database.prototype.close = function (force, callback) {
  * */
 Database.prototype._initialise = async function (ctx) {
   log.verbose('database.initialisation', safe_context({ ...ctx }), 'initialising the collection [%s]', ctx.collection)
-
-  // await this[_database].createIndex({ placeid: 1 }, { unique: true })
-  // await this[_database].createIndex({'geometry.location': '2dsphere'})
-  // await this[_database].createIndex({'geometry.shape': '2dsphere'})
 }
 
 module.exports = new Database()

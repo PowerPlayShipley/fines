@@ -65,6 +65,9 @@ module.exports = Object.assign({}, {
   },
   updateEventWithID: async (req, res, next) => {
     const { event } = req.params
+    // This is so we know which session sent the request if we got it
+    const realtimeSession = req.get('X-REALTIME-SESSION')
+    realtimeSession && require('../../utils/log').http('events:controller', { event, realtimeSession }, 'Updated via realtime')
 
     const data = req.body
 
@@ -73,7 +76,7 @@ module.exports = Object.assign({}, {
       const patches = toMongodb(Array.isArray(data) ? data : [data])
 
       response = await datastore.findOneAndUpdateWithId(config.get('collection-events'))(event, patches)
-      req.eventStream && req.eventStream.emit(ROUTING_KEY_EVENTS_UPDATED, response)
+      req.eventStream && req.eventStream.emit(ROUTING_KEY_EVENTS_UPDATED, response, realtimeSession)
     } catch (err) {
       return next(err)
     }

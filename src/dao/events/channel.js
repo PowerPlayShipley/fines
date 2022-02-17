@@ -36,9 +36,9 @@ class Channel {
     return this
   }
 
-  emit(eventName, message) {
-    log.info('event:stream', { eventName, message }, 'Published %s', JSON.stringify(message))
-    this.channel.publish(this.exchange, eventName, Buffer.from(JSON.stringify(message)))
+  emit(eventName, ...message) {
+    log.info('event:stream', { eventName, message }, 'Published %s', createMessage(message))
+    this.channel.publish(this.exchange, eventName, Buffer.from(createMessage(message)))
   }
 
   on(eventName, listener, opts = { exclusive: false, durable: true }) {
@@ -64,3 +64,8 @@ class Channel {
 }
 
 module.exports = { Channel }
+
+function createMessage (messages) {
+  if (messages.length === 1) return JSON.stringify(messages[0])
+  return JSON.stringify(messages)
+}

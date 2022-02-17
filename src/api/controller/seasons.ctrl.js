@@ -63,6 +63,9 @@ module.exports = Object.assign({}, {
   },
   updateSeasonWithID: async (req, res, next) => {
     const { season } = req.params
+    // This is so we know which session sent the request if we got it
+    const realtimeSession = req.get('X-REALTIME-SESSION')
+    realtimeSession && require('../../utils/log').http('seasons:controller', { season, realtimeSession }, 'Updated via realtime')
 
     const data = req.body
 
@@ -71,7 +74,7 @@ module.exports = Object.assign({}, {
       const patches = toMongodb(Array.isArray(data) ? data : [data])
 
       response = await datastore.findOneAndUpdateWithId(config.get('collection-seasons'))(season, patches)
-      req.eventStream && req.eventStream.emit(ROUTING_KEY_SEASON_UPDATED, response)
+      req.eventStream && req.eventStream.emit(ROUTING_KEY_SEASON_UPDATED, response, realtimeSession)
     } catch (err) {
       return next(err)
     }

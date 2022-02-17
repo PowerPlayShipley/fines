@@ -15,7 +15,10 @@ module.exports = async (uri, exchange, queue = '', ...topics) => {
   await Promise.allSettled(topics.map((topic) => channel.bindQueue(q.queue, exchange, topic)))
 
   return (consumer) => {
-    channel.consume(q.queue, consumer, { noAck: true })
+    channel.consume(q.queue, (message) => {
+      const content = JSON.parse(message.content.toString())
+      return consumer({ ...message, content })
+    }, { noAck: true })
 
     return async () => {
       await conn.close()

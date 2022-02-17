@@ -167,7 +167,10 @@ describe('/seasons', function () {
       const result = await waiter()
       expect(callback.called).to.be.true
       expect(result.fields.routingKey).to.be.eq(ROUTING_KEY_SEASON_UPDATED)
-      expect(JSON.parse(result.content.toString())).to.deep.eq(body.data)
+
+      const [response, sessionID] = result.content
+      expect(response).to.deep.eq(body.data)
+      expect(sessionID).to.be.null
 
       await quitter()
     });
@@ -301,7 +304,10 @@ describe('/seasons', function () {
       const result = await waiter()
       expect(callback.called).to.be.true
       expect(result.fields.routingKey).to.be.eq(ROUTING_KEY_EVENTS_UPDATED)
-      expect(JSON.parse(result.content.toString())).to.deep.eq(body.data)
+
+      const [response, sessionID] = result.content
+      expect(response).to.deep.eq(body.data)
+      expect(sessionID).to.be.null
 
       await quitter()
     });
