@@ -1,4 +1,5 @@
 const toMongodb = require('jsonpatch-to-mongodb')
+const { NotFound } = require('@hndlr/errors')
 
 const config = require('../../config')
 
@@ -74,6 +75,8 @@ module.exports = Object.assign({}, {
       const patches = toMongodb(Array.isArray(data) ? data : [data])
 
       response = await datastore.findOneAndUpdateWithId(config.get('collection-seasons'))(season, patches)
+      if (!response) return next(new NotFound(`Could not find ${season}`))
+
       req.eventStream && req.eventStream.emit(ROUTING_KEY_SEASON_UPDATED, response, realtimeSession)
     } catch (err) {
       return next(err)
