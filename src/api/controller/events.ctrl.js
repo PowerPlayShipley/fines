@@ -97,7 +97,9 @@ module.exports = Object.assign({}, {
     const { event } = req.params
 
     try {
-      await datastore.delete(config.get('collection-events'))(event)
+      const response = await datastore.delete(config.get('collection-events'))(event)
+
+      if (!response) return next(new NotFound(`Could not find ${event}`))
     } catch (err) {
       return next(err)
     }

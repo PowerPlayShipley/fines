@@ -95,7 +95,9 @@ module.exports = Object.assign({}, {
     const { season } = req.params
 
     try {
-      await datastore.delete(config.get('collection-seasons'))(season)
+      const response = await datastore.delete(config.get('collection-seasons'))(season)
+
+      if (!response) return next(new NotFound(`Could not find ${season}`))
     } catch (err) {
       return next(err)
     }
