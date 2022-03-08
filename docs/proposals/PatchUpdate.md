@@ -27,8 +27,8 @@ Changes to the way `PATCH` requests happen is now a `write control` will be pass
 ```diff
 - type PatchBody = Array<PatchDocument>
 + interface PatchBody {
-+		patches: Array<PatchDocument>
-+	  writeControl: WriteControl
++   patches: Array<PatchDocument>
++   writeControl: WriteControl
 + }
 ```
 
