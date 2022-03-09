@@ -404,10 +404,6 @@ components:
               items:
                 type: string
                 default: H
-          example:
-            HW:
-              0:
-                ['H']
         captains:
           type: object
           additionalProperties:
@@ -417,10 +413,6 @@ components:
               items:
                 type: string
                 default: H
-          example:
-            HW:
-              0:
-                [ 'H' ]
         type:
           type: string
           enum: [week, round, block]
