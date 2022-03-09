@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: APT Configuration
-        run: >
+        run: |
           sudo apt-get -y update
           sudo apt-get -y dist-upgrade
       - name: Reconfigure git to use HTTP authentication
