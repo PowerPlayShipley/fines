@@ -29,6 +29,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: APT Configuration
+        run: >
+          sudo apt-get -y update
+          sudo apt-get -y dist-upgrade
       - name: Reconfigure git to use HTTP authentication
         run: >
           git config --global url."https://github.com/".insteadOf
